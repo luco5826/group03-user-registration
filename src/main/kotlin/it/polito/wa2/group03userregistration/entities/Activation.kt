@@ -1,18 +1,20 @@
 package it.polito.wa2.group03userregistration.entities
 
 import java.util.UUID
-import javax.persistence.Entity
-import javax.persistence.Id
-import javax.persistence.MapsId
-import javax.persistence.OneToOne
+import javax.persistence.*
 
 @Entity
 class Activation {
+
     @Id
-    var id: UUID? = null
+    @GeneratedValue
+    lateinit var id: UUID
 
     @OneToOne
-    val userActivation: User? = null
+    lateinit var userActivation: User
+
+    var activationCode: String? = null
 
     var attempt: Int = 5
+
 }
