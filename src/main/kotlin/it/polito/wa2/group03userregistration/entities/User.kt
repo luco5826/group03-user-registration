@@ -10,6 +10,7 @@ import javax.persistence.Table
 @Entity
 @Table(name="ApplicationUser")
 class User {
+
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
     var id: Long? = null;
@@ -21,4 +22,5 @@ class User {
 
     @OneToOne(mappedBy="userActivation")
     var activation: Activation? = null
+
 }
