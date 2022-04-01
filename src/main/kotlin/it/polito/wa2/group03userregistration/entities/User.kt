@@ -4,6 +4,7 @@ import javax.persistence.Entity
 import javax.persistence.GeneratedValue
 import javax.persistence.GenerationType
 import javax.persistence.Id
+import javax.persistence.OneToOne
 import javax.persistence.Table
 
 @Entity
@@ -17,4 +18,7 @@ class User {
     var password: String = ""
     var salt: String = ""
     var email: String = ""
+
+    @OneToOne(mappedBy="userActivation")
+    var activation: Activation? = null
 }
