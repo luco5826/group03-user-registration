@@ -9,17 +9,13 @@ import javax.persistence.Table
 
 @Entity
 @Table(name="ApplicationUser")
-class User {
+class User(var username: String,var password: String?, var email: String) {
 
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
     var id: Long? = null;
 
-    var username: String = ""
-    var password: String = ""
     var salt: String = ""
-    var email: String = ""
-
     @OneToOne(mappedBy="userActivation")
     var activation: Activation? = null
 
