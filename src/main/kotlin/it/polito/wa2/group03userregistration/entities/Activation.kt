@@ -1,6 +1,6 @@
 package it.polito.wa2.group03userregistration.entities
 
-import org.hibernate.annotations.CreationTimestamp
+import java.time.LocalDateTime
 import java.util.Date
 import java.util.UUID
 import javax.persistence.*
@@ -11,9 +11,9 @@ class Activation(@OneToOne var userActivation: User, var activationCode: String)
     @GeneratedValue(strategy = GenerationType.AUTO)
     var id: UUID? = null
 
-    @CreationTimestamp
+
     @Temporal(TemporalType.TIMESTAMP)
-    lateinit var expirationDate: Date
+    var expirationDate: Date? = java.sql.Timestamp.valueOf(LocalDateTime.now().plusHours(6))
 
     var attempt: Int = 5
 }
