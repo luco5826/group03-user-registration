@@ -5,4 +5,4 @@ import java.util.UUID
 
 data class ActivationDTO(val provisionalId: UUID, val email: String, val activationCode: String?)
 
-fun Activation.DTO() = ActivationDTO(id, userActivation.email, activationCode)
+fun Activation.DTO() = ActivationDTO(id!!, userActivation.email, activationCode)
