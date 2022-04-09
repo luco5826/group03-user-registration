@@ -13,24 +13,32 @@ import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RestController
-import java.util.UUID
+import java.util.*
 
 // Data returned by POST /user/register
 interface RegisterResponse
-data class RegisterResponseOK (val provisional_id: UUID,
-                               val email: String): RegisterResponse
+data class RegisterResponseOK(
+    val provisional_id: UUID,
+    val email: String
+) : RegisterResponse
 
-data class RegisterResponseError (val errorType: UserValidationStatus,
-                                  val errorMessage: String?): RegisterResponse
+data class RegisterResponseError(
+    val errorType: UserValidationStatus,
+    val errorMessage: String?
+) : RegisterResponse
 
 // Data returned by POST /user/validate
 interface ValidateResponse
-data class ValidateResponseOK (val userId: Long,
-                               val username: String,
-                               val email: String): ValidateResponse
+data class ValidateResponseOK(
+    val userId: Long,
+    val username: String,
+    val email: String
+) : ValidateResponse
 
-data class ValidateResponseError (val errorType: ActivationStatus,
-                                  val errorMessage: String?): ValidateResponse
+data class ValidateResponseError(
+    val errorType: ActivationStatus,
+    val errorMessage: String?
+) : ValidateResponse
 
 @RestController
 class WebController {

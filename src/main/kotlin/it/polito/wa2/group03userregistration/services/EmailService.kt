@@ -14,10 +14,11 @@ import java.text.SimpleDateFormat
 import java.util.*
 
 @Service
-class EmailService{
+class EmailService {
 
     private val ACTIVATIONCODE_LENGTH = 10
-    private val charPool: List<Char> = ('a'..'z') + ('A'..'Z')+('0'..'9')
+    private val charPool: List<Char> = ('a'..'z') + ('A'..'Z') + ('0'..'9')
+
     @Autowired
     lateinit var activationRepository: ActivationRepository
 
@@ -29,7 +30,12 @@ class EmailService{
 
         try {
             savedEntity = activationRepository.save(Activation(user, generateActivationCode()))
-            sendMail(savedEntity.userActivation.email, savedEntity.userActivation.username,savedEntity.activationCode, savedEntity.expirationDate!!)
+            sendMail(
+                savedEntity.userActivation.email,
+                savedEntity.userActivation.username,
+                savedEntity.activationCode,
+                savedEntity.expirationDate!!
+            )
         } catch (e: MailException) {
             e.printStackTrace()
         } catch (e: Exception) {
@@ -45,11 +51,17 @@ class EmailService{
             .joinToString("")
     }
 
-    fun sendMail(toEmail: String, username: String, activationCode: String, expirationDate: Date){
+    fun sendMail(toEmail: String, username: String, activationCode: String, expirationDate: Date) {
         val message = SimpleMailMessage()
         message.setFrom("group03NML@gmail.com")
         message.setTo(toEmail)
-        message.setText("Hello $username! This is your activation code $activationCode. Please use it before ${SimpleDateFormat("yyyy-mm-dd hh:mm:ss").format(expirationDate)}.\nHave a nice day!")
+        message.setText(
+            "Hello $username! This is your activation code $activationCode. Please use it before ${
+                SimpleDateFormat(
+                    "yyyy-mm-dd hh:mm:ss"
+                ).format(expirationDate)
+            }.\nHave a nice day!"
+        )
         message.setSubject("Activation code")
 
         mailSender.send(message)

@@ -1,8 +1,7 @@
 package it.polito.wa2.group03userregistration.entities
 
 import java.time.LocalDateTime
-import java.util.Date
-import java.util.UUID
+import java.util.*
 import javax.persistence.*
 
 @Entity
