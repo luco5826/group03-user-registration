@@ -1,7 +1,7 @@
 package it.polito.wa2.group03userregistration.services
 
 import it.polito.wa2.group03userregistration.dtos.ActivationDTO
-import it.polito.wa2.group03userregistration.dtos.DTO
+import it.polito.wa2.group03userregistration.dtos.toDTO
 import it.polito.wa2.group03userregistration.entities.Activation
 import it.polito.wa2.group03userregistration.entities.User
 import it.polito.wa2.group03userregistration.repositories.ActivationRepository
@@ -22,7 +22,7 @@ class EmailService{
     lateinit var activationRepository: ActivationRepository
 
     @Autowired
-    lateinit var mailSender: JavaMailSender;
+    lateinit var mailSender: JavaMailSender
 
     fun insertActivation(user: User): ActivationDTO? {
         var savedEntity: Activation? = null
@@ -35,7 +35,7 @@ class EmailService{
         } catch (e: Exception) {
             e.printStackTrace()
         }
-        return savedEntity?.DTO()
+        return savedEntity?.toDTO()
     }
 
     fun generateActivationCode(): String {
