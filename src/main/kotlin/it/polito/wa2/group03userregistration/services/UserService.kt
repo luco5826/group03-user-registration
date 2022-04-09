@@ -46,15 +46,15 @@ class UserService {
     }
 
     fun isValidUser(user: User): UserValidationStatus {
-        user.username.isNotBlank() || return UserValidationStatus.NO_USERNAME
-        user.email.isNotBlank() || return UserValidationStatus.NO_EMAIL
-        user.password!!.isNotBlank() || return UserValidationStatus.NO_PASSWORD
-        user.password!!.matches(passwordRegex) || return UserValidationStatus.WEAK_PASSWORD
-        user.email.matches(emailRegex) || return UserValidationStatus.INVALID_EMAIL
-
-        // TODO("Check is username and email are System Unique")
-
-        return UserValidationStatus.VALID
+        // TODO("Check if username and email are System Unique")
+        return when {
+            user.username.isBlank() -> UserValidationStatus.NO_USERNAME
+            user.email.isBlank() -> UserValidationStatus.NO_EMAIL
+            user.password!!.isBlank() -> UserValidationStatus.NO_PASSWORD
+            !user.password!!.matches(passwordRegex) -> UserValidationStatus.WEAK_PASSWORD
+            !user.email.matches(emailRegex) -> UserValidationStatus.INVALID_EMAIL
+            else -> UserValidationStatus.VALID
+        }
     }
 
     fun validateUser(activation: ActivationDTO): ValidateDTO {
@@ -84,6 +84,6 @@ class UserService {
         }
 
         activationRepository.deleteById(activation.provisionalId)
-        return ValidateDTO(ActivationStatus.SUCCESSFUL, savedActivation.userActivation.toUserDTO())
+        return ValidateDTO(ActivationStatus.SUCCESSFUL, savedActivation.userActivation.toDTO())
     }
 }
