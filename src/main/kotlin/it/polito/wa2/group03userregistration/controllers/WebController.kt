@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RestController
 import java.util.*
 
-// Data returned by POST /user/register
+// Data returned by POST /users/register
 interface RegisterResponse
 data class RegisterResponseOK(
     val provisional_id: UUID,
@@ -27,7 +27,7 @@ data class RegisterResponseError(
     val errorMessage: String?
 ) : RegisterResponse
 
-// Data returned by POST /user/validate
+// Data returned by POST /users/validate
 interface ValidateResponse
 data class ValidateResponseOK(
     val userId: Long,
@@ -45,7 +45,7 @@ class WebController {
     @Autowired
     lateinit var userService: UserService
 
-    @PostMapping("/user/register")
+    @PostMapping("/users/register")
     fun registerUser(@RequestBody payload: UserDTO): ResponseEntity<RegisterResponse> {
         val registerDTO = userService.registerUser(payload)
         val resBody: RegisterResponse
@@ -59,7 +59,7 @@ class WebController {
         }
     }
 
-    @PostMapping("/user/validate")
+    @PostMapping("/users/validate")
     fun validateUser(@RequestBody payload: ActivationDTO): ResponseEntity<ValidateResponse> {
         val validateDTO = userService.validateUser(payload)
         val resBody: ValidateResponse

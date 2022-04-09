@@ -56,9 +56,9 @@ class EmailService {
         message.setFrom("group03NML@gmail.com")
         message.setTo(toEmail)
         message.setText(
-            "Hello $username! This is your activation code $activationCode. Please use it before ${
+            "Hello $username! This is your activation code:\n\n$activationCode \n\nPlease use it before ${
                 SimpleDateFormat(
-                    "yyyy-mm-dd hh:mm:ss"
+                    "yyyy-MM-dd hh:mm:ss"
                 ).format(expirationDate)
             }.\nHave a nice day!"
         )
