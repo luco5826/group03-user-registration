@@ -19,10 +19,16 @@ class ScheduledPruneJob {
 
     @Scheduled(initialDelayString = "PT01M", fixedDelayString = "PT01M")
     fun checkExpiredRegistrationToken() {
-        val expiredRecords = activationRepository.findAll().filter { it.expirationDate!!.before(java.sql.Timestamp.valueOf(
-            LocalDateTime.now())) }
+        val expiredRecords = activationRepository.findAll().filter {
+            it.expirationDate!!.before(
+                java.sql.Timestamp.valueOf(
+                    LocalDateTime.now()
+                )
+            )
+        }
         expiredRecords.forEach {
             activationRepository.deleteById(it.id!!)
-            userRepository.deleteById(it.userActivation.id!!) }
+            userRepository.deleteById(it.userActivation.id!!)
+        }
     }
 }
