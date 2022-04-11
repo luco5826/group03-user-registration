@@ -19,8 +19,8 @@ import java.util.*
 
 
 @Testcontainers
-@SpringBootTest(webEnvironment=SpringBootTest.WebEnvironment.RANDOM_PORT)
-@AutoConfigureTestDatabase(replace=AutoConfigureTestDatabase.Replace.NONE)
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+@AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 class ActivationDTOTests {
 
     companion object {
@@ -33,7 +33,7 @@ class ActivationDTOTests {
             registry.add("spring.datasource.url", postgres::getJdbcUrl)
             registry.add("spring.datasource.username", postgres::getUsername)
             registry.add("spring.datasource.password", postgres::getPassword)
-            registry.add("spring.jpa.hibernate.ddl-auto") {"create-drop"}
+            registry.add("spring.jpa.hibernate.ddl-auto") { "create-drop" }
         }
     }
 
@@ -49,7 +49,7 @@ class ActivationDTOTests {
     @Test
     fun testConstructor() {
         val uuid = UUID.randomUUID()
-        val activationDTO = ActivationDTO(uuid,  "user1@email.com", "code1")
+        val activationDTO = ActivationDTO(uuid, "user1@email.com", "code1")
         Assertions.assertEquals(activationDTO.provisionalId, uuid)
         Assertions.assertEquals(activationDTO.email, "user1@email.com")
         Assertions.assertEquals(activationDTO.activationCode, "code1")
@@ -92,7 +92,7 @@ class ActivationDTOTests {
         val savedUser = userRepository.save(user)
         val activation = Activation(savedUser, "code1")
         val savedActivation = activationRepository.save(activation)
-        val activationDTO = ActivationDTO(uuid,  "user1@email.com", "code1")
+        val activationDTO = ActivationDTO(uuid, "user1@email.com", "code1")
         Assertions.assertNotEquals(savedActivation.toDTO(), activationDTO)
     }
 
