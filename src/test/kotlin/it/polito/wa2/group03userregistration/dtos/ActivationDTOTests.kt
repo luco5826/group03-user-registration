@@ -9,7 +9,6 @@ import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase
 import org.springframework.boot.test.context.SpringBootTest
-import org.springframework.boot.web.server.LocalServerPort
 import org.springframework.test.context.DynamicPropertyRegistry
 import org.springframework.test.context.DynamicPropertySource
 import org.testcontainers.containers.PostgreSQLContainer
@@ -36,9 +35,6 @@ class ActivationDTOTests {
             registry.add("spring.jpa.hibernate.ddl-auto") { "create-drop" }
         }
     }
-
-    @LocalServerPort
-    protected var port: Int = 0
 
     @Autowired
     lateinit var activationRepository: ActivationRepository
