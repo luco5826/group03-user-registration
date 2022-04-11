@@ -10,4 +10,8 @@ class EmailServiceStub : EmailService() {
         sentMails.add(message)
     }
 
+    fun getSentMails(): MutableList<SimpleMailMessage> {
+        return sentMails
+    }
+
 }
