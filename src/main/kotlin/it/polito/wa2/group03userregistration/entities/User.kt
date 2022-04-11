@@ -8,7 +8,7 @@ class User(var username: String, var password: String?, var email: String) {
 
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
-    var id: Long? = null;
+    var id: Long? = null
 
     var salt: String = ""
 
