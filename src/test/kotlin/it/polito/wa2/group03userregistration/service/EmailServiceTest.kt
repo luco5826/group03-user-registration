@@ -11,6 +11,8 @@ import org.springframework.test.context.DynamicPropertySource
 import org.testcontainers.containers.PostgreSQLContainer
 import org.testcontainers.junit.jupiter.Container
 import org.testcontainers.junit.jupiter.Testcontainers
+import java.text.SimpleDateFormat
+import java.util.*
 
 @Testcontainers
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
@@ -47,6 +49,27 @@ class EmailServiceTest {
                     .matches(emailService.generateActivationCode())
             )
         }
+    }
+
+    @Test
+    fun testGenerateMail() {
+        val date = Date()
+        val simpleDate = SimpleDateFormat("yyyy-MM-dd hh:mm:ss").format(date)
+        val message = emailService.generateMail(
+            "destination@mail_provider.invalid",
+            "user1",
+            "act1vat1on",
+            date
+        )
+        val text = "Hello user1! This is your activation code:\n\nact1vat1on \n\nPlease use it before ${simpleDate}.\nHave a nice day!"
+        /**
+         * "subject" and "from" field are hardcoded, while "text" is generated following the above syntax
+         * and the "to" field is passed as parameter.
+         */
+        Assertions.assertEquals("Activation code", message.subject)
+        Assertions.assertEquals("group03NML@gmail.com", message.from)
+        Assertions.assertEquals("destination@mail_provider.invalid", message.to?.get(0) ?: "FAIL - no destination specified.")
+        Assertions.assertEquals(text, message.text)
     }
 
 }
