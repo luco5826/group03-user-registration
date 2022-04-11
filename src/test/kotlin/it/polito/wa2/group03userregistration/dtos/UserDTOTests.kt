@@ -38,10 +38,10 @@ class UserDTOTests {
     @Test
     fun testConstructor() {
         val userDto = UserDTO(1, "user1", "user1@email.com", "psw1")
-        Assertions.assertEquals(userDto.userId, 1)
-        Assertions.assertEquals(userDto.username, "user1")
-        Assertions.assertEquals(userDto.email, "user1@email.com")
-        Assertions.assertEquals(userDto.password, "psw1")
+        Assertions.assertEquals(1, userDto.userId)
+        Assertions.assertEquals("user1", userDto.username)
+        Assertions.assertEquals("user1@email.com", userDto.email)
+        Assertions.assertEquals("psw1", userDto.password)
     }
 
     @Test
@@ -49,7 +49,7 @@ class UserDTOTests {
         val user = User("user1", "psw1", "user1@email.com")
         val savedUser = userRepository.save(user)
         val userDto = UserDTO(savedUser.id, "user1", "user1@email.com", "psw1")
-        Assertions.assertEquals(savedUser.toDTO(), userDto)
+        Assertions.assertEquals(userDto, savedUser.toDTO())
     }
 
     @Test
@@ -57,7 +57,7 @@ class UserDTOTests {
         val user = User("user1", "psw1", "user1@email.com")
         val savedUser = userRepository.save(user)
         val userDto = UserDTO(savedUser.id, "another_user", "user1@email.com", "psw1")
-        Assertions.assertNotEquals(savedUser.toDTO(), userDto)
+        Assertions.assertNotEquals(userDto, savedUser.toDTO())
     }
 
     @Test
@@ -73,7 +73,7 @@ class UserDTOTests {
         val user = User("user1", null, "user1@email.com")
         Assertions.assertNull(user.toDTO().password)
         user.password = "brand_new_psw"
-        Assertions.assertEquals(user.toDTO().password, "brand_new_psw")
+        Assertions.assertEquals("brand_new_psw", user.toDTO().password)
     }
 
 }
