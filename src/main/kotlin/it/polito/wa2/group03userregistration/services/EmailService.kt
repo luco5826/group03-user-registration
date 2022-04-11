@@ -53,7 +53,12 @@ class EmailService {
             .joinToString("")
     }
 
-    fun generateMail(toEmail: String, username: String, activationCode: String, expirationDate: Date): SimpleMailMessage {
+    fun generateMail(
+        toEmail: String,
+        username: String,
+        activationCode: String,
+        expirationDate: Date
+    ): SimpleMailMessage {
         val message = SimpleMailMessage()
         message.setFrom("group03NML@gmail.com")
         message.setTo(toEmail)
