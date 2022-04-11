@@ -41,6 +41,8 @@ class UserServiceTest {
     @Test
     fun testIsValidUser() {
 
+        // TODO("Update once service checks uniqueness in the system")
+
         val username = "user1"
         val psw = "P4ssw0rd!"
         val email = "user1@maildomain.invalid"
