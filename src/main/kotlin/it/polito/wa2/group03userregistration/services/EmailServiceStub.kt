@@ -1,10 +1,12 @@
 package it.polito.wa2.group03userregistration.services
 
 import org.springframework.mail.SimpleMailMessage
+import org.springframework.stereotype.Service
 
+@Service
 class EmailServiceStub : EmailService() {
 
-    private lateinit var sentMails: MutableList<SimpleMailMessage>
+    private var sentMails: MutableList<SimpleMailMessage> = mutableListOf()
 
     override fun sendMail(message: SimpleMailMessage) {
         sentMails.add(message)
@@ -12,6 +14,10 @@ class EmailServiceStub : EmailService() {
 
     fun getSentMails(): MutableList<SimpleMailMessage> {
         return sentMails
+    }
+
+    fun getSentMailsSize(): Int {
+        return sentMails.size
     }
 
 }
