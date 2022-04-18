@@ -1,10 +1,13 @@
 package it.polito.wa2.group03userregistration.service
 
-import it.polito.wa2.group03userregistration.dtos.UserDTO
+import it.polito.wa2.group03userregistration.dtos.ActivationDTO
+import it.polito.wa2.group03userregistration.dtos.toDTO
 import it.polito.wa2.group03userregistration.entities.User
+import it.polito.wa2.group03userregistration.enums.ActivationStatus
 import it.polito.wa2.group03userregistration.enums.UserValidationStatus
+import it.polito.wa2.group03userregistration.repositories.UserRepository
+import it.polito.wa2.group03userregistration.services.EmailServiceStub
 import it.polito.wa2.group03userregistration.services.UserService
-import org.junit.Ignore
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
@@ -15,6 +18,7 @@ import org.springframework.test.context.DynamicPropertySource
 import org.testcontainers.containers.PostgreSQLContainer
 import org.testcontainers.junit.jupiter.Container
 import org.testcontainers.junit.jupiter.Testcontainers
+import java.util.*
 
 @Testcontainers
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
@@ -37,6 +41,12 @@ class UserServiceTest {
 
     @Autowired
     lateinit var userService: UserService
+
+    @Autowired
+    lateinit var userRepository: UserRepository
+
+    @Autowired
+    lateinit var emailServiceStub: EmailServiceStub
 
     @Test
     fun testIsValidUser() {
@@ -69,11 +79,70 @@ class UserServiceTest {
 
     }
 
-    @Ignore
     @Test
-    fun insertValidUser() {
-        val user = UserDTO(null, "alex142", "alessandrobacci142@gmail.com", "Pass!w0rd")
-        Assertions.assertEquals(UserValidationStatus.VALID, userService.registerUser(user).status)
+    fun testValidateUser() {
+
+        val username = "user1"
+        val psw = "P4ssw0rd!"
+        val email = "user1@maildomain.invalid"
+        val user = User(username, psw, email)
+        val wrongCode = "code1"
+        val randomUUID = UUID.randomUUID()
+
+        /** first search for an id which does not exist, as the activation was not inserted */
+        val wrongIdDTO = ActivationDTO(randomUUID, email, wrongCode)
+        val resWrongId = userService.validateUser(wrongIdDTO)
+        Assertions.assertEquals(ActivationStatus.ID_DOES_NOT_EXIST, resWrongId.status)
+        Assertions.assertNull(resWrongId.user)
+
+        val savedUser = userRepository.save(user)
+        val savedActivationDTO = emailServiceStub.insertActivation(savedUser)
+
+        /**
+         * test the wrong activation code. the expired timestamp case
+         * would require an extra stub for the activation, so we skip it.
+         */
+        val wrongCodeDTO = savedActivationDTO?.let { ActivationDTO(it.provisionalId, email, wrongCode) }
+        val resWrongCode = wrongCodeDTO?.let { userService.validateUser(it) }
+        if (resWrongCode != null) {
+            Assertions.assertEquals(ActivationStatus.WRONG_ACTIVATION_CODE, resWrongCode.status)
+            Assertions.assertNull(resWrongCode.user)
+        } else {
+            /** if something goes wrong the assertion should fail and not be skipped */
+            Assertions.assertTrue(false)
+        }
+
+        /**
+         * test a successful validation, and then run it again as it should
+         * not validate twice the same user-code couple.
+         */
+        val res = savedActivationDTO?.let { userService.validateUser(it) }
+        if (res != null) {
+            Assertions.assertEquals(ActivationStatus.SUCCESSFUL, res.status)
+            Assertions.assertEquals(username, res.user?.username)
+        }
+        val resSecondTry = savedActivationDTO?.let { userService.validateUser(it) }
+        if (resSecondTry != null)
+            Assertions.assertEquals(ActivationStatus.ID_DOES_NOT_EXIST, resSecondTry.status)
+
+    }
+
+    @Test
+    fun testRegisterUser() {
+
+        val username = "user1"
+        val psw = "P4ssw0rd!"
+        val email = "user1@maildomain.invalid"
+
+        /**
+         * we only test the successful case and one generic fail as all the
+         * other cases have been covered in previous tests.
+         */
+        val invalidUser = User("", psw, email).toDTO()
+        val validUser = User(username, psw, email).toDTO()
+        Assertions.assertNotEquals(UserValidationStatus.VALID, userService.registerUser(invalidUser).status)
+        Assertions.assertEquals(UserValidationStatus.VALID, userService.registerUser(validUser).status)
+
     }
 
 }
