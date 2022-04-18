@@ -86,4 +86,5 @@ class UserService {
         activationRepository.deleteById(activation.provisionalId)
         return ValidateDTO(ActivationStatus.SUCCESSFUL, savedActivation.userActivation.toDTO())
     }
+
 }

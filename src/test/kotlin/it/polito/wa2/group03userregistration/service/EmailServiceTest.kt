@@ -48,6 +48,7 @@ class EmailServiceTest {
 
     @Test
     fun testActivationCodeGeneration() {
+
         /**
          * in this implementation an activation code has an expected length of 10
          * plus it must be made of letters and numbers only. generate and check 20
@@ -59,10 +60,12 @@ class EmailServiceTest {
                     .matches(emailService.generateActivationCode())
             )
         }
+
     }
 
     @Test
     fun testGenerateMail() {
+
         val date = Date()
         val simpleDate = SimpleDateFormat("yyyy-MM-dd hh:mm:ss").format(date)
         val username = "user1"
@@ -79,10 +82,12 @@ class EmailServiceTest {
         Assertions.assertEquals("group03NML@gmail.com", message.from)
         Assertions.assertEquals(email, message.to?.get(0))
         Assertions.assertEquals(text, message.text)
+
     }
 
     @Test
     fun testInsertActivation() {
+
         val username = "user1"
         val psw = "P4ssw0rd!"
         val email = "user1@maildomain.invalid"
@@ -108,6 +113,7 @@ class EmailServiceTest {
             savedActivationDTO?.let { ActivationDTO(it.provisionalId, email, it.activationCode) }
         Assertions.assertEquals(activationDTO, savedActivationDTO)
         Assertions.assertEquals(sentMailNo + 1, emailServiceStub.getSentMailsSize())
+
         /**
          * while we are at it let's also test that it's the message we expect
          * being sent to the correct address. the overall formatting of the
@@ -116,6 +122,7 @@ class EmailServiceTest {
         val message = emailServiceStub.getSentMails()[0]
         Assertions.assertEquals("Activation code", message.subject)
         Assertions.assertEquals(email, message.to?.get(0))
+
     }
 
 }
