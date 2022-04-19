@@ -46,13 +46,14 @@ class UserService {
     }
 
     fun isValidUser(user: User): UserValidationStatus {
-        // TODO("Check if username and email are System Unique")
         return when {
             user.username.isBlank() -> UserValidationStatus.NO_USERNAME
             user.email.isBlank() -> UserValidationStatus.NO_EMAIL
             user.password!!.isBlank() -> UserValidationStatus.NO_PASSWORD
             !user.password!!.matches(passwordRegex) -> UserValidationStatus.WEAK_PASSWORD
             !user.email.matches(emailRegex) -> UserValidationStatus.INVALID_EMAIL
+            userRepository.findByEmail(user.email) != null -> UserValidationStatus.EMAIL_ALREADY_EXISTS
+            userRepository.findByUsername(user.username) != null -> UserValidationStatus.USERNAME_ALREADY_EXISTS
             else -> UserValidationStatus.VALID
         }
     }
