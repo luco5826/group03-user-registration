@@ -14,4 +14,5 @@ interface UserRepository : CrudRepository<User, Long> {
 
     @Query("SELECT u FROM User u WHERE u.username = ?1")
     fun findByUsername(username: String): User?
+
 }

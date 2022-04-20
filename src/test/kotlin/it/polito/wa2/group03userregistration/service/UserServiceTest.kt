@@ -51,8 +51,6 @@ class UserServiceTest {
     @Test
     fun testIsValidUser() {
 
-        // TODO("Update once service checks uniqueness in the system")
-
         val username = "user1"
         val psw = "P4ssw0rd!"
         val email = "user1@maildomain.invalid"
@@ -77,14 +75,21 @@ class UserServiceTest {
         Assertions.assertEquals(UserValidationStatus.NO_PASSWORD, userService.isValidUser(blankPassword))
         Assertions.assertEquals(UserValidationStatus.WEAK_PASSWORD, userService.isValidUser(weakPassword))
 
+        /** user with an existing email and then user with an existing username */
+        userRepository.save(validUser)
+        val duplicateUsername = User(username, psw, "anotherone@maildomain.invalid")
+        val duplicateEmail = User("another_username", psw, email)
+        Assertions.assertEquals(UserValidationStatus.USERNAME_ALREADY_EXISTS, userService.isValidUser(duplicateUsername))
+        Assertions.assertEquals(UserValidationStatus.EMAIL_ALREADY_EXISTS, userService.isValidUser(duplicateEmail))
+
     }
 
     @Test
     fun testValidateUser() {
 
-        val username = "user1"
+        val username = "user2"
         val psw = "P4ssw0rd!"
-        val email = "user1@maildomain.invalid"
+        val email = "user2@maildomain.invalid"
         val user = User(username, psw, email)
         val wrongCode = "code1"
         val randomUUID = UUID.randomUUID()
@@ -130,9 +135,9 @@ class UserServiceTest {
     @Test
     fun testRegisterUser() {
 
-        val username = "user1"
+        val username = "user3"
         val psw = "P4ssw0rd!"
-        val email = "user1@maildomain.invalid"
+        val email = "user3@maildomain.invalid"
 
         /**
          * we only test the successful case and one generic fail as all the
