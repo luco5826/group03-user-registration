@@ -79,7 +79,10 @@ class UserServiceTest {
         userRepository.save(validUser)
         val duplicateUsername = User(username, psw, "anotherone@maildomain.invalid")
         val duplicateEmail = User("another_username", psw, email)
-        Assertions.assertEquals(UserValidationStatus.USERNAME_ALREADY_EXISTS, userService.isValidUser(duplicateUsername))
+        Assertions.assertEquals(
+            UserValidationStatus.USERNAME_ALREADY_EXISTS,
+            userService.isValidUser(duplicateUsername)
+        )
         Assertions.assertEquals(UserValidationStatus.EMAIL_ALREADY_EXISTS, userService.isValidUser(duplicateEmail))
 
     }
