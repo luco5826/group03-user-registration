@@ -31,10 +31,12 @@ class EmailService {
         try {
             savedEntity = activationRepository.save(Activation(user, generateActivationCode()))
             sendMail(
-                savedEntity.userActivation.email,
-                savedEntity.userActivation.username,
-                savedEntity.activationCode,
-                savedEntity.expirationDate!!
+                generateMail(
+                    savedEntity.userActivation.email,
+                    savedEntity.userActivation.username,
+                    savedEntity.activationCode,
+                    savedEntity.expirationDate!!
+                )
             )
         } catch (e: MailException) {
             e.printStackTrace()
@@ -51,7 +53,12 @@ class EmailService {
             .joinToString("")
     }
 
-    fun sendMail(toEmail: String, username: String, activationCode: String, expirationDate: Date) {
+    fun generateMail(
+        toEmail: String,
+        username: String,
+        activationCode: String,
+        expirationDate: Date
+    ): SimpleMailMessage {
         val message = SimpleMailMessage()
         message.setFrom("group03NML@gmail.com")
         message.setTo(toEmail)
@@ -64,6 +71,10 @@ class EmailService {
         )
         message.setSubject("Activation code")
 
+        return message
+    }
+
+    fun sendMail(message: SimpleMailMessage) {
         mailSender.send(message)
     }
 
