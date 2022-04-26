@@ -1,5 +1,6 @@
 package it.polito.wa2.group03userregistration.entities
 
+import it.polito.wa2.group03userregistration.enums.UserRole
 import javax.persistence.*
 
 @Entity
@@ -12,7 +13,10 @@ class User(var username: String, var password: String?, var email: String) {
 
     var salt: String = ""
 
+    var role: UserRole = UserRole.CUSTOMER
+
     @OneToOne(mappedBy = "userActivation")
     var activation: Activation? = null
 
+    var enabled = 0
 }
