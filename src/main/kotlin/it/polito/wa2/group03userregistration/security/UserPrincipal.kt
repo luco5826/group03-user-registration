@@ -11,7 +11,7 @@ class UserPrincipal(private val user: User): UserDetails {
     }
 
     override fun getUsername(): String {
-       return user.username
+       return user.id.toString()
     }
 
     override fun isAccountNonExpired(): Boolean {

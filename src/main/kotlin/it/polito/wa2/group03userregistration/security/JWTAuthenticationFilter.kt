@@ -27,7 +27,7 @@ class JWTAuthenticationFilter(authenticationManager: AuthenticationManager, priv
     }
 
 
-    private val JWT_TOKEN_VALIDITY = 5 * 60 * 60
+    private val JWT_TOKEN_VALIDITY = 1000 * 60 * 60
 
     @kotlin.jvm.Throws(AuthenticationException::class)
     override fun attemptAuthentication(request: HttpServletRequest?, response: HttpServletResponse?): Authentication {
@@ -72,12 +72,10 @@ class JWTAuthenticationFilter(authenticationManager: AuthenticationManager, priv
         val roles: List<String> = principal.authorities.map { it.authority.toString() }
         val token = Jwts.builder()
             .setSubject(principal.username)
-            .claim("auth", authClaims)
             .claim("roles", roles)
-            .setSubject("login-auth")
             .setIssuedAt(Date(System.currentTimeMillis()))
             .setExpiration(Date(System.currentTimeMillis() + JWT_TOKEN_VALIDITY))
-            .signWith(Keys.hmacShaKeyFor(secret.toByteArray()), SignatureAlgorithm.HS512)
+            .signWith(Keys.hmacShaKeyFor(secret.toByteArray()), SignatureAlgorithm.HS256)
             .compact()
         response?.addHeader("Authorization", "Bearer $token")
 
