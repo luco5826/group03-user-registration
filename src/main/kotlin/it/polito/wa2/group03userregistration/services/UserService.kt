@@ -85,7 +85,7 @@ class UserService {
         }
 
         activationRepository.deleteById(activation.provisionalId)
-        userRepository.enableUserByEmail(activation.email!!)
+        userRepository.enableUserByEmail(savedActivation.userActivation.email)
         return ValidateDTO(ActivationStatus.SUCCESSFUL, savedActivation.userActivation.toDTO())
     }
 
