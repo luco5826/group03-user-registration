@@ -45,7 +45,7 @@ class WebController {
     @Autowired
     lateinit var userService: UserService
 
-    @PostMapping("/users/register")
+    @PostMapping("/user/register")
     fun registerUser(@RequestBody payload: UserDTO): ResponseEntity<RegisterResponse> {
         val registerDTO = userService.registerUser(payload)
         val resBody: RegisterResponse
@@ -59,7 +59,7 @@ class WebController {
         }
     }
 
-    @PostMapping("/users/validate")
+    @PostMapping("/user/validate")
     fun validateUser(@RequestBody payload: ActivationDTO): ResponseEntity<ValidateResponse> {
         val validateDTO = userService.validateUser(payload)
         val resBody: ValidateResponse
